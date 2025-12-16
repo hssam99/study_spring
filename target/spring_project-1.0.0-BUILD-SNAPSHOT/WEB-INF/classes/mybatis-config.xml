@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="com.koreait.www.domain.BoardVO" alias="BoardVO"/>
+        <typeAlias type="com.koreait.www.domain.PagingVO" alias="PagingVO"/>
+        <typeAlias type="com.koreait.www.domain.CommentVO" alias="CommentVO"/>
+        <typeAlias type="com.koreait.www.domain.FileVO" alias="FileVO"/>
+        <typeAlias type="com.koreait.www.domain.UserVO" alias="UserVO"/>
+        <typeAlias type="com.koreait.www.domain.UserAuthVO" alias="UserAuthVO"/>
+    </typeAliases>
+</configuration>

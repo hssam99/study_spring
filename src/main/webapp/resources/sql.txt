@@ -1,0 +1,3 @@
+database : springdb
+username : springuser
+password : mysql

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koreait.www.repository.CommentDAO">
+    <insert id="insert" parameterType="CommentVO">
+        INSERT INTO comment(bno, writer, content)
+        VALUES (#{bno}, #{writer}, #{content})
+    </insert>
+
+<!--    <select id="getCmtList" parameterType="long" resultType="CommentVO">-->
+<!--        SELECT * FROM comment-->
+<!--        WHERE bno = #{bno}-->
+<!--        ORDER BY cno DESC-->
+<!--    </select>    -->
+    <select id="getList" resultType="CommentVO">
+        SELECT * FROM comment
+        WHERE bno = #{bno}
+        ORDER BY cno DESC
+        LIMIT #{paging.pageStart}, #{paging.qty}
+    </select>
+    <select id="getTotal" resultType="int">
+        SELECT COUNT(cno)
+        FROM comment
+        WHERE bno =  #{bno}
+    </select>
+
+    <update id="update" parameterType="CommentVO">
+        UPDATE comment
+        SET content = #{content}
+        WHERE cno = #{cno}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM comment
+        WHERE cno = #{cno}
+    </delete>
+</mapper>

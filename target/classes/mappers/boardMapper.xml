@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koreait.www.repository.BoardDAO">
+    <!-- namespace = dao interface의 이름 id=메소드명 -->
+    <insert id="insert" parameterType="BoardVO">
+        INSERT INTO board(title, writer, content)
+        VALUES (#{title}, #{writer}, #{content})
+    </insert>
+<!--    <select id="getList" resultType="BoardVO">-->
+<!--&#45;&#45;         SELECT * FROM board WHERE is_del = 0 ORDER BY bno DESC-->
+<!--            SELECT bno, title, writer, reg_date, read_count-->
+<!--            FROM board-->
+<!--            ORDER BY bno DESC-->
+<!--            LIMIT #{pageStart}, #{qty}-->
+<!--    </select>-->
+
+    <select id="getDetail" parameterType="long" resultType="BoardVO">
+        SELECT * FROM board WHERE bno = #{bno}
+    </select>
+    <update id="update" parameterType="BoardVO">
+        UPDATE board
+        SET title = #{title}, content = #{content}
+        WHERE bno = #{bno}
+    </update>
+    <delete id="delete" parameterType="long">
+        UPDATE board
+        SET is_del = 1
+        WHERE bno = #{bno}
+    </delete>
+    <update id="upReadCount" parameterType="long">
+        UPDATE board
+        SET read_count = read_count + 1
+        WHERE bno = #{bno}
+    </update>
+<!--    <select id="getTotalCount" resultType="int">-->
+<!--        SELECT COUNT(*) FROM board-->
+<!--    </select>-->
+
+
+    <select id="getList" resultType="BoardVO">
+        SELECT bno, title, writer, reg_date, read_count, cmt_qty, file_qty
+        FROM board
+        <where>
+            is_del = 0
+            <if test="keyword != null and keyword != ''">
+                <trim prefix="(" suffix=")" prefixOverrides="OR">
+                    <foreach item="type" collection="typeToArray">
+                        <choose>
+                            <when test="type.toString() == 't'.toString()">
+                                OR title LIKE CONCAT('%', #{keyword}, '%')
+                            </when>
+                            <when test="type.toString() == 'c'.toString()">
+                                OR content LIKE CONCAT('%', #{keyword}, '%')
+                            </when>
+                            <when test="type.toString() == 'w'.toString()">
+                                OR writer LIKE CONCAT('%', #{keyword}, '%')
+                            </when>
+                        </choose>
+                    </foreach>
+                </trim>
+            </if>
+        </where>
+        ORDER BY bno DESC
+        LIMIT #{pageStart}, #{qty}
+    </select>
+
+    <select id="getTotalCount" resultType="int" parameterType="com.koreait.www.domain.PagingVO">
+        SELECT COUNT(*) FROM board
+        WHERE is_del = 0
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <trim prefix="(" suffix=")" prefixOverrides="OR">
+                    <foreach item="type" collection="typeToArray">
+                        <choose>
+                            <when test="type.toString() == 't'.toString()">
+                                OR title LIKE CONCAT('%', #{keyword}, '%')
+                            </when>
+                            <when test="type.toString() == 'c'.toString()">
+                                OR content LIKE CONCAT('%', #{keyword}, '%')
+                            </when>
+                            <when test="type.toString() == 'w'.toString()">
+                                OR writer LIKE CONCAT('%', #{keyword}, '%')
+                            </when>
+                        </choose>
+                    </foreach>
+                </trim>
+            </if>
+        </where>
+    </select>
+
+    <update id="updateCmtQty">
+        UPDATE board
+        SET cmt_qty = cmt_qty + #{amount}
+        WHERE bno = #{bno}
+    </update>
+
+    <select id="getBno" resultType="long">
+        SELECT MAX(bno) FROM board
+    </select>
+
+    <update id="fileQtyUpdate">
+        UPDATE board
+        SET file_qty = file_qty + #{size}
+        WHERE bno = #{bno}
+    </update>
+    
+</mapper>
